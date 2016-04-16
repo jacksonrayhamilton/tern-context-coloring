@@ -104,6 +104,7 @@ describe('scopify', function () {
   it('should color variables in objects', fixture('object-shorthand'));
   it('should color dynamic values by scope of origin', fixture('dynamic-and-lexical-bindings'));
   it('should color blocks', fixture('blocks', {blockScope: true}));
+  it('should color catch block scopes', fixture('catch'));
   it('should infer module scope from import', fixture('es-modules-import'));
   it('should infer module scope from export', fixture('es-modules-export'));
   it('should infer node from shebang', fixture('node-shebang', {levels: 'elevated'}));
