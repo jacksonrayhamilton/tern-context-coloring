@@ -216,6 +216,7 @@
 
     walk.ancestor(ast, {
       ArrowFunctionExpression: scopeHandler,
+      BlockStatement: scopeHandler,
       FunctionDeclaration: scopeHandler,
       FunctionExpression: scopeHandler,
       Identifier: identifierHandler,
