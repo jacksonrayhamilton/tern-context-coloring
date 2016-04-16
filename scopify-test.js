@@ -7,6 +7,7 @@ var assert = require('assert');
 var fs = require('fs');
 var path = require('path');
 var infer = require('tern/lib/infer');
+var isBoolean = require('lodash/isBoolean');
 var isObject = require('lodash/isObject');
 var isString = require('lodash/isString');
 var scopify = require('./scopify');
@@ -87,9 +88,13 @@ var fixture = function (fixtureName, options) {
   var levelsName = isString(options.levels) ? options.levels : fixtureName;
   var code = fs.readFileSync(path.join(fixturesDirectory, jsName) + '.js', 'utf8');
   var levels = fs.readFileSync(path.join(fixturesDirectory, levelsName) + '.levels', 'utf8');
+  var scopifyOptions = {};
+  if (isBoolean(options.blockScope)) {
+    scopifyOptions.blockScope = options.blockScope;
+  }
   return function () {
     var file = createTernFile(jsName + '.js', code);
-    var tokens = scopify(walk, file.ast, file.scope);
+    var tokens = scopify(walk, file.ast, file.scope, scopifyOptions);
     assertLevels(tokensToLevels(code, tokens), levels);
   };
 };
@@ -98,6 +103,8 @@ describe('scopify', function () {
   it('should color variables and functions by scope', fixture('function-scopes'));
   it('should color variables in objects', fixture('object-shorthand'));
   it('should color dynamic values by scope of origin', fixture('dynamic-and-lexical-bindings'));
+  it('should color blocks in non-strict mode', fixture('non-strict-blocks', {blockScope: true}));
+  it('should color blocks in strict mode', fixture('strict-blocks', {blockScope: true}));
   it('should infer module scope from import', fixture('es-modules-import'));
   it('should infer module scope from export', fixture('es-modules-export'));
   it('should infer node from shebang', fixture('node-shebang', {levels: 'elevated'}));
