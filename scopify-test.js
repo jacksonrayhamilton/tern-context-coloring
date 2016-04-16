@@ -96,6 +96,7 @@ var fixture = function (fixtureName, options) {
 
 describe('scopify', function () {
   it('should color variables and functions by scope', fixture('function-scopes'));
+  it('should color variables in objects', fixture('object-shorthand'));
   it('should color dynamic values by scope of origin', fixture('dynamic-and-lexical-bindings'));
   it('should infer module scope from import', fixture('es-modules-import'));
   it('should infer module scope from export', fixture('es-modules-export'));
