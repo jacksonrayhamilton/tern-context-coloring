@@ -1,0 +1,22 @@
+{
+  "name": "tern-context-coloring",
+  "main": "context-coloring",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "npm run lint && npm run unit",
+    "unit": "mocha '*-test.js'"
+  },
+  "dependencies": {
+    "tmp": "0.0.28"
+  },
+  "devDependencies": {
+    "acorn": "^3.0.4",
+    "eslint": "^2.7.0",
+    "lodash": "^4.9.0",
+    "mocha": "^2.4.5",
+    "tern": "^0.18.0"
+  },
+  "peerDependencies": {
+    "tern": "^0.18.0"
+  }
+}
