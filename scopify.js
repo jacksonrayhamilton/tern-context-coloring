@@ -64,16 +64,8 @@
       var enclosingScope;
       for (var i = nodes.length - 1; i >= 0; i -= 1) {
         var node = nodes[i];
-        var scope;
-        if (node.type === 'TryStatement' && node.handler) {
-          // CatchClause is not walked directly and thus will not appear in the
-          // provided nodes array.
-          scope = node.handler.scope;
-        } else {
-          scope = node.scope;
-        }
-        if (scope) {
-          enclosingScope = scope;
+        if (node.scope) {
+          enclosingScope = node.scope;
           break;
         }
       }
@@ -154,12 +146,6 @@
       );
     };
 
-    var tryStatementHandler = function (node) {
-      if (node.handler) {
-        scopeHandler(node.handler);
-      }
-    };
-
     var importSpecifierHandler = function (node, ancestors) {
       identifierHandler(node.local, ancestors);
     };
@@ -231,6 +217,7 @@
     walk.ancestor(ast, {
       ArrowFunctionExpression: scopeHandler,
       BlockStatement: scopeHandler,
+      CatchClause: scopeHandler,
       FunctionDeclaration: scopeHandler,
       FunctionExpression: scopeHandler,
       Identifier: identifierHandler,
@@ -238,7 +225,6 @@
       ImportNamespaceSpecifier: importSpecifierHandler,
       Program: scopeHandler,
       ThisExpression: identifierHandler,
-      TryStatement: tryStatementHandler,
       VariablePattern: identifierHandler
     });
 
