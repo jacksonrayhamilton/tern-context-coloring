@@ -77,7 +77,9 @@
 
     var dynamicallyBound = [
       'arguments',
-      'this'
+      'this',
+      'super',
+      'new'
     ];
     var dynamicallyBinding = [
       'FunctionDeclaration',
@@ -131,6 +133,8 @@
         var name;
         if (node.type === 'ThisExpression') {
           name = 'this';
+        } else if (node.type === 'Super') {
+          name = 'super';
         } else {
           name = node.name;
         }
@@ -148,6 +152,12 @@
 
     var importSpecifierHandler = function (node, ancestors) {
       identifierHandler(node.local, ancestors);
+    };
+
+    var metaPropertyHandler = function (node, ancestors) {
+      if (node.meta.name === 'new') {
+        identifierHandler(node.meta, ancestors);
+      }
     };
 
     if (initialLevel !== 1 && inferModules) {
@@ -223,7 +233,9 @@
       Identifier: identifierHandler,
       ImportDefaultSpecifier: importSpecifierHandler,
       ImportNamespaceSpecifier: importSpecifierHandler,
+      MetaProperty: metaPropertyHandler,
       Program: scopeHandler,
+      Super: identifierHandler,
       ThisExpression: identifierHandler,
       VariablePattern: identifierHandler
     });

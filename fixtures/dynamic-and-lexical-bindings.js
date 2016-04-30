@@ -1,15 +1,30 @@
-function a() {
+(function () {
   this;
   arguments;
-  var b = () => this + arguments + (() => this + arguments);
-  function c() {
+  super();
+  new.target;
+  (function () {
     this;
     arguments;
-    var d = () => this + arguments + (() => this + arguments);
-  }
-  var e = () => function () {
+    super();
+    new.target;
+    (() => {
+      this;
+      arguments;
+      super();
+      new.target;
+    });
+  });
+  (() => {
     this;
     arguments;
-    var f = () => this + arguments + (() => this + arguments);
-  };
-}
+    super();
+    new.target;
+    (() => {
+      this;
+      arguments;
+      super();
+      new.target;
+    });
+  });
+});
