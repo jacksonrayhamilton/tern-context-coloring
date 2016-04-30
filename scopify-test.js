@@ -13,7 +13,7 @@ var isString = require('lodash/isString');
 var scopify = require('./scopify');
 var walk = require('acorn/dist/walk');
 
-var fixturesDirectory = path.join(__dirname, 'test-fixtures');
+var fixturesDirectory = path.join(__dirname, 'fixtures');
 
 // Create a representation of a file's AST and scope like Tern does.
 var createTernFile = function (name, code) {
