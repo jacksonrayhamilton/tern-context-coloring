@@ -1,0 +1,5 @@
+(source gnu)
+
+(package-file "tern-context-coloring.el")
+
+(depends-on "context-coloring")
