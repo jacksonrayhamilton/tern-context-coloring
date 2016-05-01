@@ -52,11 +52,13 @@
       (point)
       :full-file))))
 
-(context-coloring-define-dispatch
+;;;###autoload
+(puthash
  'tern
- :modes '(js-mode js-jsx-mode)
- :colorizer #'tern-context-coloring-colorize
- :setup #'context-coloring-setup-idle-change-detection
- :teardown #'context-coloring-teardown-idle-change-detection)
+ (list :modes '(js-mode js-jsx-mode)
+       :colorizer #'tern-context-coloring-colorize
+       :setup #'context-coloring-setup-idle-change-detection
+       :teardown #'context-coloring-teardown-idle-change-detection)
+ context-coloring-dispatch-hash-table)
 
 (provide 'tern-context-coloring)
