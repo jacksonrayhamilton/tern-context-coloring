@@ -93,10 +93,7 @@
         if (scope.originNode) {
           type = scope.originNode.type;
         }
-        if ((contains(Object.keys(scope.props), name) &&
-             // Acorn (I believe incorrectly) includes `arguments` in arrow
-             // function props.
-             (name !== 'arguments' || type !== 'ArrowFunctionExpression')) ||
+        if (contains(Object.keys(scope.props), name) ||
             (contains(dynamicallyBound, name) &&
              contains(dynamicallyBinding, type))) {
           definingScope = scope;
