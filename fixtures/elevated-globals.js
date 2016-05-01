@@ -1,0 +1,3 @@
+import a;
+global;
+Object;

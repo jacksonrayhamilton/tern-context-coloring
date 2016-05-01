@@ -6,6 +6,7 @@
 var assert = require('assert');
 var fs = require('fs');
 var path = require('path');
+var pick = require('lodash/pick');
 var infer = require('tern/lib/infer');
 var isBoolean = require('lodash/isBoolean');
 var isObject = require('lodash/isObject');
@@ -13,15 +14,25 @@ var isString = require('lodash/isString');
 var scopify = require('./scopify');
 var walk = require('acorn/dist/walk');
 
+// eslint-disable-next-line global-require
+var defs = [require('tern/defs/ecma5.json'), require('tern/defs/ecma6.json')];
 var fixturesDirectory = path.join(__dirname, 'fixtures');
 
+// Wrap a scope as Tern would do in the "modules" plugin.
+var buildWrappingScope = function (parent, origin, node) {
+  var scope = new infer.Scope(parent, node);
+  scope.origin = origin;
+  return scope;
+};
+
 // Create a representation of a file's AST and scope like Tern does.
-var createTernFile = function (name, code) {
+var createTernFile = function (name, code, options) {
+  var wrap = isBoolean(options.wrap) ? options.wrap : false;
   var file = {
     name: name,
     text: code
   };
-  var context = new infer.Context();
+  var context = new infer.Context(defs);
   infer.withContext(context, function () {
     file.ast = infer.parse(file.text, {
       directSourceFile: file,
@@ -30,6 +41,9 @@ var createTernFile = function (name, code) {
       ecmaVersion: 6
     });
     file.scope = context.topScope;
+    if (wrap) {
+      file.scope = buildWrappingScope(file.scope, file.name, file.ast);
+    }
     infer.analyze(file.ast, file.text, file.scope);
   });
   return file;
@@ -88,12 +102,9 @@ var fixture = function (fixtureName, options) {
   var levelsName = isString(options.levels) ? options.levels : fixtureName;
   var code = fs.readFileSync(path.join(fixturesDirectory, jsName) + '.js', 'utf8');
   var levels = fs.readFileSync(path.join(fixturesDirectory, levelsName) + '.levels', 'utf8');
-  var scopifyOptions = {};
-  if (isBoolean(options.blockScope)) {
-    scopifyOptions.blockScope = options.blockScope;
-  }
+  var scopifyOptions = pick(options, 'blockScope', 'inferNode', 'inferModules');
   return function () {
-    var file = createTernFile(jsName + '.js', code);
+    var file = createTernFile(jsName + '.js', code, options);
     var tokens = scopify(walk, file.ast, file.scope, scopifyOptions);
     assertLevels(tokensToLevels(code, tokens), levels);
   };
@@ -105,6 +116,9 @@ describe('scopify', function () {
   it('should color dynamic values by scope of origin', fixture('dynamic-and-lexical-bindings'));
   it('should color blocks', fixture('blocks', {blockScope: true}));
   it('should color catch block scopes', fixture('catch'));
+  it('should color globals in natural elevated scope (local top scope)', fixture('elevated-globals', {wrap: true}));
+  it('should color globals in inferred elevated scope (global top scope)', fixture('elevated-globals', {inferModules: true}));
+  it('should color globals in inferred elevated scope (local top scope)', fixture('elevated-globals', {inferModules: true, wrap: true}));
   it('should infer module scope from import', fixture('es-modules-import', {inferModules: true}));
   it('should infer module scope from export', fixture('es-modules-export', {inferModules: true}));
   it('should infer node from shebang', fixture('node-shebang', {inferNode: true, levels: 'elevated'}));

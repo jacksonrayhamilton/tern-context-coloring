@@ -44,8 +44,6 @@
     var inferModules = isBoolean(options.inferModules) ? options.inferModules : false;
     var inferNode = isBoolean(options.inferNode) ? options.inferNode : false;
 
-    var initialLevel = 0;
-
     var getLevel = function (scope) {
       if (scope.level === undefined) {
         if (scope.prev) {
@@ -119,7 +117,7 @@
       scopes.push([
         node.start + charOffset,
         node.end + charOffset,
-        node.scope ? getLevel(node.scope) : initialLevel
+        node.scope ? getLevel(node.scope) : getLevel(topScope)
       ]);
     };
 
@@ -157,10 +155,10 @@
       }
     };
 
-    if (initialLevel !== 1 && inferModules) {
+    if (topScope.level === undefined && inferModules) {
       // Infer if module scope should be used.
       var moduleHandler = function () {
-        initialLevel = 1;
+        topScope.level = 1;
       };
       walk.ancestor(ast, {
         ImportDeclaration: moduleHandler,
@@ -170,16 +168,16 @@
       });
     }
 
-    if (initialLevel !== 1 && inferNode) {
+    if (topScope.level === undefined && inferNode) {
       // Infer if Node module scope should be used.  First check for shell
       // scripts, which are a pretty sure giveaway.
       var nodeShebangPattern = /^#!.*?\/bin\/env node/;
       if (nodeShebangPattern.test(ast.sourceFile.text)) {
-        initialLevel = 1;
+        topScope.level = 1;
       }
     }
 
-    if (initialLevel !== 1 && inferNode) {
+    if (topScope.level === undefined && inferNode) {
       // Try and locate Node free variables in use at the top-level. (Anywhere
       // other than the top level could be a false positive, e.g. a UMD should
       // not trick the heuristic.)
@@ -201,7 +199,7 @@
       var nodeCallExpressionHandler = function (node, ancestors) {
         var callee = node.callee.name;
         if (callee === 'require' && isTopLevelFree(ancestors, callee)) {
-          initialLevel = 1;
+          topScope.level = 1;
         }
       };
       var nodeMemberExpressionHandler = function (node, ancestors) {
@@ -210,7 +208,7 @@
         if ((object === 'exports' ||
              (object === 'module' && property === 'exports')) &&
             isTopLevelFree(ancestors, object)) {
-          initialLevel = 1;
+          topScope.level = 1;
         }
       };
       walk.ancestor(ast, {
@@ -218,8 +216,6 @@
         MemberExpression: nodeMemberExpressionHandler
       });
     }
-
-    topScope.level = initialLevel;
 
     walk.ancestor(ast, {
       ArrowFunctionExpression: scopeHandler,
