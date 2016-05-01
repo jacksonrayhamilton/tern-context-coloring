@@ -52,8 +52,8 @@
   var coloringsMap = Object.create(null);
   var charOffset = 0;
   var blockScope = false;
-  var inferModules = true;
-  var inferNode = true;
+  var inferModules = false;
+  var inferNode = false;
   var useFileSystem = false;
 
   var postInfer = function (ast, scope) {

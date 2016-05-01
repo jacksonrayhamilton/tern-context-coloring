@@ -41,8 +41,8 @@
 
     var charOffset = isNumber(options.charOffset) ? options.charOffset : 0;
     var blockScope = isBoolean(options.blockScope) ? options.blockScope : false;
-    var inferModules = isBoolean(options.inferModules) ? options.inferModules : true;
-    var inferNode = isBoolean(options.inferNode) ? options.inferNode : true;
+    var inferModules = isBoolean(options.inferModules) ? options.inferModules : false;
+    var inferNode = isBoolean(options.inferNode) ? options.inferNode : false;
 
     var initialLevel = 0;
 
