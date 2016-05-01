@@ -1,4 +1,18 @@
-;; -*- lexical-binding: t; -*-
+;;; tern-context-coloring.el --- Use Tern for context coloring  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2016  Jackson Ray Hamilton
+
+;; Author: Jackson Ray Hamilton <jackson@jacksonrayhamilton.com>
+;; Version: 0.0.0
+;; Keywords: convenience faces tools
+;; Package-Requires: ((emacs "24.3"))
+;; URL: https://github.com/jacksonrayhamilton/tern-context-coloring
+
+;;; Commentary:
+
+;; Use Tern as a backend for context coloring.
+
+;;; Code:
 
 (require 'context-coloring)
 (require 'tern)
@@ -39,6 +53,7 @@
       (tern-context-coloring-apply-tokens tokens)
       (context-coloring-colorize-comments-and-strings))))
 
+;;;###autoload
 (defun tern-context-coloring-colorize ()
   "Query tern for contextual colors and colorize the buffer."
   (interactive)
@@ -52,6 +67,10 @@
       (point)
       :full-file))))
 
+;; Redefine this so it can be autoloaded.
+;;;###autoload
+(defvar context-coloring-dispatch-hash-table (make-hash-table :test #'eq))
+
 ;;;###autoload
 (puthash
  'tern
@@ -62,3 +81,5 @@
  context-coloring-dispatch-hash-table)
 
 (provide 'tern-context-coloring)
+
+;;; tern-context-coloring.el ends here
