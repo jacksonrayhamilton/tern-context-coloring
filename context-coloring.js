@@ -52,16 +52,12 @@
   var coloringsMap = Object.create(null);
   var charOffset = 0;
   var blockScope = false;
-  var inferModules = false;
-  var inferNode = false;
   var useFileSystem = false;
 
   var postInfer = function (ast, scope) {
     coloringsMap[ast.sourceFile.name] = scopify(walk, ast, scope, {
       charOffset: charOffset,
-      blockScope: blockScope,
-      inferModules: inferModules,
-      inferNode: inferNode
+      blockScope: blockScope
     });
   };
 
@@ -78,20 +74,6 @@
         blockScope = options.blockScope;
       } else {
         throw ternError('Option blockScope must be a boolean');
-      }
-    }
-    if (has(options, 'inferModules')) {
-      if (isBoolean(options.inferModules)) {
-        inferModules = options.inferModules;
-      } else {
-        throw ternError('Option inferModules must be a boolean');
-      }
-    }
-    if (has(options, 'inferNode')) {
-      if (isBoolean(options.inferNode)) {
-        inferNode = options.inferNode;
-      } else {
-        throw ternError('Option inferNode must be a boolean');
       }
     }
     if (has(options, 'useFileSystem')) {

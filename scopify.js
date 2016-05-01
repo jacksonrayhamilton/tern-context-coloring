@@ -41,8 +41,6 @@
 
     var charOffset = isNumber(options.charOffset) ? options.charOffset : 0;
     var blockScope = isBoolean(options.blockScope) ? options.blockScope : false;
-    var inferModules = isBoolean(options.inferModules) ? options.inferModules : false;
-    var inferNode = isBoolean(options.inferNode) ? options.inferNode : false;
 
     var getLevel = function (scope) {
       if (scope.level === undefined) {
@@ -154,68 +152,6 @@
         identifierHandler(node.meta, ancestors);
       }
     };
-
-    if (topScope.level === undefined && inferModules) {
-      // Infer if module scope should be used.
-      var moduleHandler = function () {
-        topScope.level = 1;
-      };
-      walk.ancestor(ast, {
-        ImportDeclaration: moduleHandler,
-        ExportAllDeclaration: moduleHandler,
-        ExportDefaultDeclaration: moduleHandler,
-        ExportNamedDeclaration: moduleHandler
-      });
-    }
-
-    if (topScope.level === undefined && inferNode) {
-      // Infer if Node module scope should be used.  First check for shell
-      // scripts, which are a pretty sure giveaway.
-      var nodeShebangPattern = /^#!.*?\/bin\/env node/;
-      if (nodeShebangPattern.test(ast.sourceFile.text)) {
-        topScope.level = 1;
-      }
-    }
-
-    if (topScope.level === undefined && inferNode) {
-      // Try and locate Node free variables in use at the top-level. (Anywhere
-      // other than the top level could be a false positive, e.g. a UMD should
-      // not trick the heuristic.)
-      var isInBlock = function (nodes) {
-        for (var i = nodes.length - 1; i >= 0; i -= 1) {
-          var node = nodes[i];
-          if (node.type === 'BlockStatement') {
-            return true;
-          }
-        }
-        return false;
-      };
-      var isTopLevelFree = function (ancestors, name) {
-        return (
-          !isInBlock(ancestors) &&
-          getDefiningScope(getEnclosingScope(ancestors), name) === undefined
-        );
-      };
-      var nodeCallExpressionHandler = function (node, ancestors) {
-        var callee = node.callee.name;
-        if (callee === 'require' && isTopLevelFree(ancestors, callee)) {
-          topScope.level = 1;
-        }
-      };
-      var nodeMemberExpressionHandler = function (node, ancestors) {
-        var object = node.object.name;
-        var property = node.property.name;
-        if ((object === 'exports' ||
-             (object === 'module' && property === 'exports')) &&
-            isTopLevelFree(ancestors, object)) {
-          topScope.level = 1;
-        }
-      };
-      walk.ancestor(ast, {
-        CallExpression: nodeCallExpressionHandler,
-        MemberExpression: nodeMemberExpressionHandler
-      });
-    }
 
     walk.ancestor(ast, {
       ArrowFunctionExpression: scopeHandler,
