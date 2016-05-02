@@ -2,4 +2,4 @@
 
 (package-file "tern-context-coloring.el")
 
-(depends-on "context-coloring")
+(depends-on "context-coloring" "7.2.2")
