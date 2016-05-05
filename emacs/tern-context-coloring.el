@@ -52,6 +52,11 @@
       (point)
       :full-file))))
 
+;;;###autoload
+(defun tern-context-coloring-predicate ()
+  "Determine if Tern should be used for context coloring."
+  tern-mode)
+
 ;; Redefine this so it can be autoloaded.
 ;;;###autoload
 (defvar context-coloring-dispatch-hash-table (make-hash-table :test #'eq))
@@ -59,7 +64,7 @@
 ;;;###autoload
 (puthash
  'tern
- (list :modes '(js-mode js-jsx-mode)
+ (list :predicate #'tern-context-coloring-predicate
        :colorizer #'tern-context-coloring-colorize
        :setup #'context-coloring-setup-idle-change-detection
        :teardown #'context-coloring-teardown-idle-change-detection)
