@@ -32,7 +32,7 @@
     return Array.prototype.concat.apply([], array);
   };
 
-  var contains = function (list, element) {
+  var includes = function (list, element) {
     return Array.prototype.indexOf.call(list, element) > -1;
   };
 
@@ -89,9 +89,9 @@
         if (scope.originNode) {
           type = scope.originNode.type;
         }
-        if (contains(Object.keys(scope.props), name) ||
-            (contains(dynamicallyBound, name) &&
-             contains(dynamicallyBinding, type))) {
+        if (includes(Object.keys(scope.props), name) ||
+            (includes(dynamicallyBound, name) &&
+             includes(dynamicallyBinding, type))) {
           definingScope = scope;
           break;
         }
