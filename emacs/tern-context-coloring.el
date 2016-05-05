@@ -22,36 +22,21 @@
   (run-with-idle-timer 0 nil fn))
 
 (defun tern-context-coloring-apply-tokens (tokens)
-  "Iterate through tokens representing start, end and level."
-  (while tokens
-    (context-coloring-colorize-region
-     (pop tokens)
-     (pop tokens)
-     (pop tokens))))
-
-(defun tern-context-coloring-read-numbers ()
-  "Fast `json-read' for an array of integers."
-  (let* ((braceless (buffer-substring-no-properties
-                     (1+ (point-min))
-                     (1- (point-max))))
-         (numbers (mapcar #'string-to-number
-                          (split-string braceless ","))))
-    numbers))
+  "Iterate through TOKENS representing start, end and level."
+  (let ((index 0) (length (length tokens)))
+    (while (< index length)
+      (context-coloring-colorize-region
+       (aref tokens index)
+       (aref tokens (+ index 1))
+       (aref tokens (+ index 2)))
+      (setq index (+ index 3)))))
 
 (defun tern-context-coloring-do-colorize (data)
   "Use DATA to colorize the buffer."
   (context-coloring-before-colorize)
-  (let* ((file (cdr (assq 'file data)))
-         (tokens (cond
-                  (file
-                   (with-temp-buffer
-                     (insert-file-contents file)
-                     (tern-context-coloring-read-numbers)))
-                  (t
-                   data))))
-    (with-silent-modifications
-      (tern-context-coloring-apply-tokens tokens)
-      (context-coloring-colorize-comments-and-strings))))
+  (with-silent-modifications
+    (tern-context-coloring-apply-tokens data)
+    (context-coloring-colorize-comments-and-strings)))
 
 ;;;###autoload
 (defun tern-context-coloring-colorize ()

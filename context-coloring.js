@@ -9,8 +9,6 @@
       mod(require(path.resolve(ternDir, 'lib/infer')),
           require(path.resolve(ternDir, 'lib/tern')),
           require(path.resolve(ternDir, 'node_modules/acorn/dist/walk')),
-          require('fs'),
-          require('tmp'),
           require('./scopify'));
       /* eslint-enable global-require */
     };
@@ -20,13 +18,11 @@
     define(['tern/lib/infer',
             'tern/lib/tern',
             'acorn/dist/walk',
-            'fs',
-            'tmp',
             './scopify'], mod);
     return;
   }
-  mod(tern, tern, acorn.walk, null, null, scopify); // Global
-}(function (infer, tern, walk, fs, tmp, scopify) {
+  mod(tern, tern, acorn.walk, scopify); // Global
+}(function (infer, tern, walk, scopify) {
 
   'use strict';
 
@@ -52,7 +48,6 @@
   var coloringsMap = Object.create(null);
   var charOffset = 0;
   var blockScope = false;
-  var useFileSystem = false;
 
   var postInfer = function (ast, scope) {
     coloringsMap[ast.sourceFile.name] = scopify(walk, ast, scope, {
@@ -76,32 +71,12 @@
         throw ternError('Option blockScope must be a boolean');
       }
     }
-    if (has(options, 'useFileSystem')) {
-      if (isBoolean(options.useFileSystem)) {
-        useFileSystem = options.useFileSystem;
-      } else {
-        throw ternError('Option useFileSystem must be a boolean');
-      }
-    }
     server.on('postInfer', postInfer);
   });
 
   tern.defineQueryType('context-coloring', {
     run: function (Server, query, file) {
-      var coloring = coloringsMap[file.name];
-      if (useFileSystem) {
-        if (fs && tmp) {
-          // Tern wants the response object synchronously.
-          /* eslint-disable no-sync */
-          var tmpobj = tmp.fileSync();
-          fs.writeFileSync(tmpobj.name, JSON.stringify(coloring));
-          /* eslint-enable no-sync */
-          return {file: tmpobj.name};
-        } else {
-          throw ternError('No file system available');
-        }
-      }
-      return coloring;
+      return coloringsMap[file.name];
     },
     takesFile: true,
     fullFile: true

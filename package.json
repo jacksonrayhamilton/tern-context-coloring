@@ -6,9 +6,6 @@
     "test": "npm run lint && npm run unit",
     "unit": "mocha '*-test.js'"
   },
-  "dependencies": {
-    "tmp": "0.0.28"
-  },
   "devDependencies": {
     "acorn": "^3.0.4",
     "eslint": "^2.7.0",
