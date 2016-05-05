@@ -109,7 +109,7 @@
     // Scopes and the things inside them are recorded separately, because it
     // will be faster to color all the scopes and then all of their things.
     var scopes = [];
-    var tokens = [];
+    var identifiers = [];
 
     var scopeHandler = function (node) {
       scopes.push([
@@ -136,7 +136,7 @@
           level = getLevel(definingScope);
         }
       }
-      tokens.push(
+      identifiers.push(
         node.start + charOffset,
         node.end + charOffset,
         level
@@ -177,7 +177,7 @@
 
     return [].concat(
       flatten(scopes),
-      tokens
+      identifiers
     );
   };
 
