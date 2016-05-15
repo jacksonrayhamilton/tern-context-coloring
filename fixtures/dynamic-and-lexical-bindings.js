@@ -28,3 +28,14 @@
     });
   });
 });
+(() => {
+  this;
+  arguments;
+  super();
+  new.target;
+});
+(function () {
+  (() => {
+    arguments;
+  });
+});
