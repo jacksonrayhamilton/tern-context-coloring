@@ -3,5 +3,5 @@
 
 (package-file "tern-context-coloring.el")
 
-(depends-on "context-coloring" "7.2.2")
+(depends-on "context-coloring" "8.0.0")
 (depends-on "tern" "0.0.1")
