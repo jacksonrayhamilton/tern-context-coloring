@@ -60,3 +60,11 @@ global variables are colored the same (as they share the same scope).  If the
 Tern `modules` plugin is enabled (e.g. via the `es_modules` or `node` plugin),
 then top-level variables will be colored indicating they are local to the
 module.
+
+## Recommendation
+
+It's recommended you use a version of Tern after [PR #787][] was merged, as it
+fixed an issue with `query-replace`, and included fixes for hashbangs and
+`catch` block scope coloring.
+
+[PR #787]: https://github.com/ternjs/tern/pull/787
