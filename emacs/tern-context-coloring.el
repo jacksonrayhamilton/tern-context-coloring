@@ -12,9 +12,9 @@
 
 ;; Use Tern as a backend for context coloring.
 
-;; Add following lines below the Tern setup code.
+;; Add the following code to enable Tern support for context coloring:
 
-;; (eval-after-load 'tern
+;; (eval-after-load 'context-coloring
 ;;   '(tern-context-coloring-setup))
 
 ;;; Code:
@@ -62,7 +62,7 @@
 
 ;;;###autoload
 (defun tern-context-coloring-setup ()
-  "Setup context coloring for tern-mode."
+  "Add Tern support to `context-coloring-mode'."
   (interactive)
   (puthash
    'tern

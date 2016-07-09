@@ -37,10 +37,10 @@ after [issue #744][] was resolved) or in `.tern-project`:
 your editor's context coloring plugin for the proper value of this option.)
 
 [Configure Melpa][] in Emacs and install the plugin: `M-x package-install
-tern-context-coloring`.  Enable the Tern Emacs plugin:
+tern-context-coloring`.  Enable the Tern context coloring Emacs plugin:
 
 ```lisp
-(eval-after-load 'tern
+(eval-after-load 'context-coloring
   '(tern-context-coloring-setup))
 ```
 
