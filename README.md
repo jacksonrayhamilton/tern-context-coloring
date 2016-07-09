@@ -37,8 +37,15 @@ after [issue #744][] was resolved) or in `.tern-project`:
 your editor's context coloring plugin for the proper value of this option.)
 
 [Configure Melpa][] in Emacs and install the plugin: `M-x package-install
-tern-context-coloring`.  Enable `tern-mode` and then `context-coloring-mode`
-when opening JavaScript files:
+tern-context-coloring`.  Enable the Tern Emacs plugin:
+
+```lisp
+(eval-after-load 'tern
+  '(tern-context-coloring-setup))
+```
+
+Also enable `tern-mode` and then `context-coloring-mode` when opening JavaScript
+files:
 
 ```lisp
 (add-hook 'js-mode-hook (lambda ()

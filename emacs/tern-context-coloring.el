@@ -12,6 +12,11 @@
 
 ;; Use Tern as a backend for context coloring.
 
+;; Add following lines below the Tern setup code.
+
+;; (eval-after-load 'tern
+;;   '(tern-context-coloring-setup))
+
 ;;; Code:
 
 (require 'context-coloring)
@@ -38,7 +43,6 @@
     (tern-context-coloring-apply-tokens data)
     (context-coloring-colorize-comments-and-strings)))
 
-;;;###autoload
 (defun tern-context-coloring-colorize ()
   "Query tern for contextual colors and colorize the buffer."
   (interactive)
@@ -52,23 +56,21 @@
       (point)
       :full-file))))
 
-;;;###autoload
 (defun tern-context-coloring-predicate ()
   "Determine if Tern should be used for context coloring."
   tern-mode)
 
-;; Redefine this so it can be autoloaded.
 ;;;###autoload
-(defvar context-coloring-dispatch-hash-table (make-hash-table :test #'eq))
-
-;;;###autoload
-(puthash
- 'tern
- (list :predicate #'tern-context-coloring-predicate
-       :colorizer #'tern-context-coloring-colorize
-       :setup #'context-coloring-setup-idle-change-detection
-       :teardown #'context-coloring-teardown-idle-change-detection)
- context-coloring-dispatch-hash-table)
+(defun tern-context-coloring-setup ()
+  "Setup context coloring for tern-mode."
+  (interactive)
+  (puthash
+   'tern
+   (list :predicate #'tern-context-coloring-predicate
+         :colorizer #'tern-context-coloring-colorize
+         :setup #'context-coloring-setup-idle-change-detection
+         :teardown #'context-coloring-teardown-idle-change-detection)
+   context-coloring-dispatch-hash-table))
 
 (provide 'tern-context-coloring)
 
