@@ -1,4 +1,4 @@
-# tern-context-coloring
+# tern-context-coloring [![Build Status](https://travis-ci.org/jacksonrayhamilton/tern-context-coloring.svg?branch=master)](https://travis-ci.org/jacksonrayhamilton/tern-context-coloring)
 
 Use [Tern][] as a back-end for context coloring.
 
