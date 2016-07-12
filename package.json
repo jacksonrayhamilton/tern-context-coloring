@@ -1,6 +1,10 @@
 {
   "name": "tern-context-coloring",
+  "description": "Tern plugin adding scope coloring",
   "main": "context-coloring",
+  "version": "0.0.0",
+  "repository": "github:jacksonrayhamilton/tern-context-coloring",
+  "license": "MIT",
   "scripts": {
     "lint": "eslint .",
     "test": "npm run lint && npm run unit",
