@@ -2,7 +2,7 @@
   "name": "tern-context-coloring",
   "description": "Tern plugin adding scope coloring",
   "main": "context-coloring",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "repository": "github:jacksonrayhamilton/tern-context-coloring",
   "license": "MIT",
   "scripts": {
