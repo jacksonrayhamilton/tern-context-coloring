@@ -20,8 +20,7 @@ Install the npm package globally:
 
 `npm i -g tern-context-coloring`
 
-Enable the plugin in `.tern-config` (recommended if using a version of Tern
-after [issue #744][] was resolved) or in `.tern-project`:
+Enable the plugin in `~/.tern-config` (recommended) or in `.tern-project`:
 
 ```json
 {
@@ -54,7 +53,6 @@ files:
                             (context-coloring-mode))))
 ```
 
-[issue #744]: https://github.com/ternjs/tern/issues/744
 [Configure Melpa]: http://melpa.org/#/getting-started
 
 ## Configuring
@@ -67,11 +65,3 @@ global variables are colored the same (as they share the same scope).  If the
 Tern `modules` plugin is enabled (e.g. via the `es_modules` or `node` plugin),
 then top-level variables will be colored indicating they are local to the
 module.
-
-## Recommendation
-
-It's recommended you use a version of Tern after [PR #787][] was merged, as it
-fixed an issue with `query-replace`, and included fixes for hashbangs and
-`catch` block scope coloring.
-
-[PR #787]: https://github.com/ternjs/tern/pull/787
